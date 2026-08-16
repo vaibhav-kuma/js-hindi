@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  @apply bg-ink font-sans text-slate-300 antialiased;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.24);
+  color: #e0faff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #05070b;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 8px;
+  border: 2px solid #05070b;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+:focus-visible {
+  outline: 2px solid theme(colors.accent.DEFAULT);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@layer components {
+  .sys-label {
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-slate-500;
+  }
+  .panel {
+    @apply rounded-xl border border-line bg-surface/60;
+  }
+  .panel-nested {
+    @apply rounded-lg border border-line/70 bg-surface-dim/40;
+  }
+  .accent-line {
+    @apply bg-gradient-to-r from-accent/70 via-violet/60 to-transparent;
+  }
+  .text-glow-cyan {
+    text-shadow: 0 0 24px rgba(34, 211, 238, 0.45);
+  }
+  .text-glow-violet {
+    text-shadow: 0 0 24px rgba(167, 139, 250, 0.4);
+  }
+  .skip-link {
+    @apply sr-only z-[999] rounded-md border border-accent/40 bg-ink px-4 py-2 font-mono text-sm text-accent;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed left-4 top-4;
+  }
+}
+
+/* Decorative canned environments -------------------------------------------------- */
+.bg-lines {
+  background-image: linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.cursor-block::after {
+  content: "▋";
+  @apply ml-1 inline-block animate-blink text-accent;
+}
+
+.clip-corner {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 14px) 0,
+    100% 14px,
+    100% 100%,
+    14px 100%,
+    0 calc(100% - 14px)
+  );
+}
+
+/* Shimmer placeholder for async 3D canvases */
+.shimmer-box {
+  background: linear-gradient(
+    100deg,
+    rgba(148, 163, 184, 0.05) 40%,
+    rgba(148, 163, 184, 0.12) 50%,
+    rgba(148, 163, 184, 0.05) 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.4s linear infinite;
+}
