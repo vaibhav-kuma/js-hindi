@@ -43,7 +43,7 @@ export function AITransformationEngine({
     [],
   );
 
-  useFrame((state, delta) => {
+    useFrame((state, delta) => {
     if (!group.current || reduced) return;
     group.current.rotation.y += delta * (hovered ? 0.4 : 0.14);
     if (portal.current) {
@@ -51,9 +51,12 @@ export function AITransformationEngine({
     }
     if (flow.current) {
       const t = state.clock.elapsedTime;
-      flow.current.children.forEach((mesh, i) => {
-        const phase = (t * particles[i]?.speed ?? 0.12 + (particles[i]?.seed ?? 0));
-        const progress = (phase + (particles[i]?.seed ?? 0)) % 1;
+      const meshes = flow.current.children as THREE.Mesh[];
+      meshes.forEach((mesh, i) => {
+        const particle = particles[i];
+        if (!particle) return;
+        const phase = t * particle.speed;
+        const progress = (phase + particle.seed) % 1;
         const point = curve.getPoint(progress);
         mesh.position.copy(point);
         const scale = 1 + Math.sin(progress * Math.PI) * 0.8;

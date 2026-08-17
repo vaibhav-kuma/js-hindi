@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Github, Menu, X } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { siteConfig } from "@/data/site";
@@ -45,7 +46,7 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <a
+                <Link
           href="/#top"
           aria-label={`${siteConfig.name} — home`}
           className="flex items-center gap-2.5 font-mono text-sm tracking-[0.22em] text-slate-200"
@@ -53,7 +54,7 @@ export function Header() {
           <span className="flex h-7 w-7 items-center justify-center rounded border border-accent/40 bg-accent/10 text-accent" aria-hidden="true">◈</span>
           <span className="hidden sm:inline">{siteConfig.brand}</span>
           <span className="text-slate-500 sm:hidden">VK</span>
-        </a>
+        </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
           {siteConfig.nav.map((item) => (
@@ -71,7 +72,7 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           {siteConfig.openToOpportunities ? (
-            <a
+                        <Link
               href="/#contact"
               onClick={navigate("contact")}
               className="hidden items-center gap-2 rounded-full border border-mint/30 bg-mint/10 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-300 transition-colors hover:bg-mint/20 md:inline-flex"
@@ -80,8 +81,8 @@ export function Header() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint" />
               </span>
-              Open to opportunities
-            </a>
+                            Open to opportunities
+            </Link>
           ) : null}
           <a
             href={siteConfig.githubUrl}

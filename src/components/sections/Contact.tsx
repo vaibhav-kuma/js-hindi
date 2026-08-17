@@ -23,10 +23,10 @@ export function Contact() {
         <Reveal>
           <SectionHeading
             index="06"
-            eyebrow="Let's build something"
+                        eyebrow="Let&apos;s build something"
             title={
               <span id="contact-heading">
-                LET'S BUILD SOMETHING
+                LET&apos;S BUILD SOMETHING
               </span>
             }
           />
