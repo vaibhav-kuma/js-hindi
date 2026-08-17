@@ -1,0 +1,103 @@
+---
+title: "Building a Unified SOC Platform with 15 Microservices"
+date: "2026-08-15"
+description: "How we architected a real-time security operations platform that consolidates SIEM, EDR, threat intelligence, and automated response into a single interface."
+tags: ["backend", "security", "architecture", "fastapi", "kafka"]
+coverImage: "/blog/soc-platform-cover.png"
+draft: false
+---
+
+Modern security teams operate fragmented toolchains. SIEM, EDR, threat intelligence platforms, and orchestration tools all live in separate panes. Data is siloed, and analysts waste precious time stitching context together before they can respond.
+
+**SOC_plateform** was built to solve this: a unified, AI-driven security operations platform that brings the entire security lifecycle — ingest, detect, analyze, respond — into a single React dashboard backed by 15 FastAPI microservices.
+
+## The Architecture
+
+The platform follows a microservices architecture orchestrated behind a Traefik API gateway:
+
+- **Ingestion Services** — Kafka-backed log ingestion and normalization
+- **Detection Engine** — MITRE ATT&CK-based threat detection and alert mapping
+- **Enrichment Pipeline** — Threat intelligence correlation and scoring
+- **Response Orchestrator** — Automated incident response with playbook execution
+- **Dashboard** — React SPA with real-time WebSocket updates
+
+```python
+# Example: FastAPI service structure
+from fastapi import FastAPI
+from kafka import KafkaProducer
+
+app = FastAPI(title="SOC Ingestion Service")
+
+producer = KafkaProducer(
+    bootstrap_servers="kafka:9092",
+    value_serializer=lambda v: v.json().encode()
+)
+
+@app.post("/logs/ingest")
+async def ingest_logs(logs: List[LogEntry]):
+    for log in logs:
+        normalized = normalize_log(log)
+        await producer.send("siem.raw", normalized)
+    return {"status": "accepted", "count": len(logs)}
+```
+
+## Key Engineering Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| **FastAPI over Flask** | Native async support, auto-generated OpenAPI docs |
+| **Kafka over RabbitMQ** | High-throughput event streaming, replay capability |
+| **Microservices over monolith** | Independent deployment, scaling, team autonomy |
+| **React SPA** | Real-time WebSocket updates for live alerting |
+| **Elasticsearch separate from PostgreSQL** | Search/analytics isolated from operational store |
+
+<Callout type="info" title="Performance Note">
+The platform reduced mean-time-to-detection from **hours to minutes** by unifying 15 microservices into a single coherent platform with MITRE ATT&CK mapping across all detection rules.
+</Callout>
+
+## AI Capabilities
+
+The platform integrates several AI-driven features:
+
+1. **Anomaly Detection Models** — Behavioral baseline deviation detection
+2. **LLM-Powered Alert Summarization** — Context enrichment for analysts
+3. **Automated Triage Agent** — Incident classification and routing
+4. **Threat Intelligence Correlation** — Cross-reference with external feeds
+
+```yaml
+# docker-compose.yml snippet
+services:
+  api-gateway:
+    image: traefik:v2.10
+    command:
+      - --api.dashboard=true
+      - --providers.docker=true
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+```
+
+## Results
+
+- ✅ Unified 15 microservices into a single SOC platform
+- ✅ Reduced MTTD from hours to minutes
+- ✅ Integrated MITRE ATT&CK mapping across all detection rules
+- ✅ Real-time dashboard with live alerting and visualization
+
+## Future Improvements
+
+- Graph-based entity resolution for cross-signal correlation
+- Federated learning for anomaly detection models
+- SOAR playbook visual editor for non-technical analysts
+
+---
+
+*This post covers the architecture behind the [SOC_plateform](https://github.com/vaibhav-kuma/SOC_plateform) repository. The codebase is open source and available on GitHub.*

@@ -38,6 +38,7 @@ export const siteConfig = {
     { id: "projects", label: "Projects" },
     { id: "architecture", label: "Architecture" },
     { id: "activity", label: "Activity" },
+    { id: "blog", label: "Blog" },
     { id: "contact", label: "Contact" },
   ] satisfies NavigationItem[],
 } as const;

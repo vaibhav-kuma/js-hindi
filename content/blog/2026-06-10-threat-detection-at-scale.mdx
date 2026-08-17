@@ -1,0 +1,157 @@
+---
+title: "Threat Detection at Scale: Building a Real-Time SIEM"
+date: "2026-06-10"
+description: "Architecting a containerized SIEM with real-time threat detection, MITRE ATT&CK tagging, and Grafana observability for security monitoring at scale."
+tags: ["security", "siem", "threat-detection", "grafana", "kafka"]
+coverImage: "/blog/threat-detection-cover.png"
+draft: false
+---
+
+Detecting threats in real time requires both a responsive dashboard for analysts and a robust backend for log correlation. Most solutions are either too heavy or too disconnected. **VADT** (Threat Detection) pairs a Flask + React + MongoDB dashboard with a lightweight containerized SIEM for log ingestion, correlation, and alerting — all tagged to MITRE ATT&CK.
+
+## The Observability Stack
+
+The system uses a modern observability stack:
+
+```yaml
+# docker-compose.yml for observability stack
+services:
+  prometheus:
+    image: prom/prometheus:v2.47
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:10.1
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./dashboards:/etc/grafana/provisioning/dashboards
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+```
+
+## Real-Time Correlation Engine
+
+The SIEM correlates logs in real time using Kafka Streams:
+
+```python
+# Kafka Streams correlation logic
+from kafka import KafkaConsumer, KafkaProducer
+import json
+
+consumer = KafkaConsumer(
+    'logs.raw',
+    bootstrap_servers='kafka:9092',
+    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+)
+
+producer = KafkaProducer(
+    bootstrap_servers='kafka:9092',
+    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+)
+
+RULES = load_mitre_rules()  # MITRE ATT&CK technique mappings
+
+for message in consumer:
+    log = message.value
+    alerts = []
+    
+    for rule in RULES:
+        if rule.matches(log):
+            alert = {
+                'technique_id': rule.technique_id,
+                'technique_name': rule.name,
+                'tactic': rule.tactic,
+                'severity': rule.severity,
+                'timestamp': log['timestamp'],
+                'source_ip': log.get('source_ip'),
+                'details': log
+            }
+            alerts.append(alert)
+    
+    for alert in alerts:
+        producer.send('alerts.mitre', alert)
+```
+
+## MITRE ATT&CK Integration
+
+Every detection maps to MITRE ATT&CK for clear incident context:
+
+<Callout type="tip" title="MITRE ATT&CK Coverage">
+Mapping detections to MITRE ATT&CK provides **clear detection coverage** and enables threat-informed defense strategies.
+</Callout>
+
+| Tactic | Techniques Covered | Detection Count |
+|--------|-------------------|-----------------|
+| Initial Access | T1190, T1566, T1078 | 12 |
+| Execution | T1059, T1053, T1569 | 8 |
+| Persistence | T1505, T1543, T1098 | 6 |
+| Privilege Escalation | T1068, T1548, T1134 | 5 |
+| Defense Evasion | T1070, T1112, T1562 | 9 |
+
+## Dashboard Architecture
+
+The React dashboard consumes real-time alerts via WebSocket:
+
+```tsx
+// Real-time alert feed
+function AlertFeed() {
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+  
+  useEffect(() => {
+    const ws = new WebSocket('wss://api.vadt.local/ws/alerts');
+    
+    ws.onmessage = (event) => {
+      const alert = JSON.parse(event.data);
+      setAlerts(prev => [alert, ...prev].slice(0, 100));
+    };
+    
+    return () => ws.close();
+  }, []);
+  
+  return (
+    <div className="space-y-2">
+      {alerts.map(alert => (
+        <AlertCard key={alert.id} alert={alert} />
+      ))}
+    </div>
+  );
+}
+```
+
+## Results
+
+- ✅ Real-time dashboard with live threat visualization
+- ✅ MITRE ATT&CK coverage mapping across all detection rules
+- ✅ Lightweight SIEM running in production containers
+- ✅ Grafana integration for metric visualization
+
+## Lessons Learned
+
+1. **Separate concerns**: Keep SIEM correlation separate from dashboard
+2. **Standardize early**: MITRE ATT&CK as the single framework for all detections
+3. **Containerize everything**: Dockerized SIEM enables easy deployment and scaling
+4. **Plan for volume**: Kafka handles log spikes gracefully
+
+---
+
+*The [VADT](https://github.com/vaibhav-kuma/VADT) repository contains the full implementation including the Flask API, React dashboard, and containerized SIEM.*
