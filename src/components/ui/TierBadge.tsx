@@ -1,19 +1,21 @@
 import { cn } from "@/lib/utils";
 import type { Tier } from "@/lib/types";
 
-const tierStyles: Record<Tier, { label: string; className: string }> = {
+const tierStyles: Record<Tier, { label: string; className: string; dotClass: string }> = {
   FLAGSHIP: {
     label: "Flagship",
-    className:
-      "border-accent/50 bg-accent/15 text-cyan-300 shadow-glow-sm",
+    className: "border-accent/40 bg-accent/10 text-accent",
+    dotClass: "bg-accent animate-pulse",
   },
   FEATURED: {
     label: "Featured",
-    className: "border-violet/50 bg-violet/15 text-violet-200",
+    className: "border-violet/40 bg-violet/10 text-violet",
+    dotClass: "bg-violet",
   },
   SECONDARY: {
     label: "Repo",
-    className: "border-line bg-white/[0.03] text-slate-400",
+    className: "border-border bg-card text-[var(--color-text-muted)]",
+    dotClass: "bg-[var(--color-text-muted)]",
   },
 };
 
@@ -22,7 +24,7 @@ export function TierBadge({ tier, className }: { tier: Tier; className?: string 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded border px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em]",
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-caption uppercase tracking-[0.16em]",
         config.className,
         className,
       )}
@@ -30,9 +32,7 @@ export function TierBadge({ tier, className }: { tier: Tier; className?: string 
       <span
         className={cn(
           "h-1.5 w-1.5 rounded-full",
-          tier === "FLAGSHIP" && "bg-accent animate-pulse",
-          tier === "FEATURED" && "bg-violet",
-          tier === "SECONDARY" && "bg-slate-500",
+          config.dotClass,
         )}
         aria-hidden="true"
       />

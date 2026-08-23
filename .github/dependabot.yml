@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      dev-dependencies:
+        patterns:
+          - "@types/*"
+          - "eslint*"
+          - "typescript*"
+          - "vitest*"
+          - "@testing-library/*"
+          - "@vitest/*"
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "next*"
+          - "@next/*"
+      three-ecosystem:
+        patterns:
+          - "three*"
+          - "@react-three/*"
+      ui-dependencies:
+        patterns:
+          - "framer-motion*"
+          - "lucide-react*"
+          - "clsx*"
+          - "tailwind-merge*"
+          - "tailwindcss*"
+          - "postcss*"
+          - "autoprefixer*"

@@ -76,3 +76,65 @@ export async function fetchGitHubRepositories(
     return null;
   }
 }
+
+/** Fetch a single repository by owner/repo name. */
+export async function fetchGitHubRepo(
+  owner: string,
+  repo: string,
+): Promise<GitHubRepoData | null> {
+  try {
+    const response = await fetch(`${GITHUB_API}/repos/${owner}/${repo}`, {
+      headers: headers(),
+      next: { revalidate: 3600 },
+    });
+    if (!response.ok) return null;
+    const data = (await response.json()) as Record<string, unknown>;
+    return {
+      name: String(data.name ?? repo),
+      description:
+        typeof data.description === "string" ? data.description : null,
+      language: typeof data.language === "string" ? data.language : null,
+      stars: typeof data.stargazers_count === "number" ? data.stargazers_count : 0,
+      forks: typeof data.forks_count === "number" ? data.forks_count : 0,
+      url: typeof data.html_url === "string" ? data.html_url : `https://github.com/${owner}/${repo}`,
+      topics: Array.isArray(data.topics) ? (data.topics as string[]) : [],
+      pushedAt: typeof data.pushed_at === "string" ? data.pushed_at : "",
+      homepage: typeof data.homepage === "string" && data.homepage ? data.homepage : null,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Enrich project statistics from GitHub API.
+ * Returns updated statistics or original if API fails.
+ */
+export async function enrichProjectStatistics(
+  owner: string,
+  repoName: string,
+  originalStats: {
+    language: string;
+    stars: number;
+    forks: number;
+    createdAt: string;
+    lastPush: string;
+  },
+): Promise<{
+  language: string;
+  stars: number;
+  forks: number;
+  createdAt: string;
+  lastPush: string;
+}> {
+  const repo = await fetchGitHubRepo(owner, repoName);
+  if (!repo) return originalStats;
+
+  return {
+    language: repo.language ?? originalStats.language,
+    stars: repo.stars ?? originalStats.stars,
+    forks: repo.forks ?? originalStats.forks,
+    createdAt: originalStats.createdAt, // Keep original creation date
+    lastPush: repo.pushedAt ?? originalStats.lastPush,
+  };
+}

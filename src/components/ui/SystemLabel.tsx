@@ -11,10 +11,16 @@ export function SystemLabel({
   tone?: "muted" | "accent" | "violet" | "mint";
 }) {
   const tones = {
-    muted: "text-slate-500",
+    muted: "text-[var(--color-text-muted)]",
     accent: "text-accent",
     violet: "text-violet",
     mint: "text-mint",
+  } as const;
+  const lineColors = {
+    muted: "bg-[var(--color-border-strong)]",
+    accent: "bg-accent/70",
+    violet: "bg-violet/70",
+    mint: "bg-mint/70",
   } as const;
   return (
     <span
@@ -27,10 +33,7 @@ export function SystemLabel({
       <span
         className={cn(
           "h-[1px] w-5",
-          tone === "accent" && "bg-accent/70",
-          tone === "violet" && "bg-violet/70",
-          tone === "mint" && "bg-mint/70",
-          tone === "muted" && "bg-slate-600",
+          lineColors[tone],
         )}
         aria-hidden="true"
       />

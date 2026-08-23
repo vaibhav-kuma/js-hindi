@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { siteConfig } from "@/data/site";
 import { cn } from "@/lib/utils";
 import { useScrollToId } from "@/components/layout/LenisProvider";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -70,9 +71,9 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+<div className="flex items-center gap-3">
           {siteConfig.openToOpportunities ? (
-                        <Link
+            <Link
               href="/#contact"
               onClick={navigate("contact")}
               className="hidden items-center gap-2 rounded-full border border-mint/30 bg-mint/10 px-3 py-1 font-mono text-[11px] uppercase tracking-wider text-emerald-300 transition-colors hover:bg-mint/20 md:inline-flex"
@@ -81,9 +82,10 @@ export function Header() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-mint" />
               </span>
-                            Open to opportunities
+              Open to opportunities
             </Link>
           ) : null}
+          <ThemeToggle />
           <a
             href={siteConfig.githubUrl}
             target="_blank"

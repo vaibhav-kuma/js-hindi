@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Github, Star, GitFork } from "lucide-react";
 import type { ProjectConfig } from "@/lib/types";
 import { TierBadge } from "@/components/ui/TierBadge";
@@ -76,11 +77,15 @@ export function CaseStudyHeader({ project }: { project: ProjectConfig }) {
 
       {project.screenshots && project.screenshots.length > 0 ? (
         <div className="mt-6">
-          <img
-            src={project.screenshots[0].src}
-            alt={project.screenshots[0].caption || project.name}
-            className="w-full max-w-4xl rounded-lg border border-line"
-          />
+          <div className="relative aspect-video max-w-4xl overflow-hidden rounded-lg border border-line">
+            <Image
+              src={project.screenshots[0].src}
+              alt={project.screenshots[0].caption || project.name}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
+            />
+          </div>
           {project.screenshots[0].caption ? (
             <p className="mt-2 text-[11px] text-slate-500">
               {project.screenshots[0].caption}

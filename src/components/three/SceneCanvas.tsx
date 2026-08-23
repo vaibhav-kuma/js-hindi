@@ -66,5 +66,3 @@ export function SceneCanvas({
     </div>
   );
 }
-
-type SceneProps = CameraProps;

@@ -9,7 +9,6 @@ import { siteConfig } from "@/data/site";
 import type { ProjectConfig } from "@/lib/types";
 import { useDeviceTier } from "@/hooks/useDeviceTier";
 import { useWebglSupported } from "@/hooks/useWebgl";
-import { cn } from "@/lib/utils";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { RepoCard } from "@/components/projects/RepoCard";
@@ -32,27 +31,27 @@ function ProjectHoverCard({ project }: { project: ProjectConfig }) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.18 }}
-        className="rounded-xl border border-accent/40 bg-void/90 p-4 shadow-glow-sm backdrop-blur-md"
+        className="card shadow-glow"
       >
         <div className="flex items-center justify-between gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
+          <span className="sys-label text-accent">
             {project.category}
           </span>
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 sm:inline">
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-text-muted)] sm:inline">
             click to open case study
           </span>
         </div>
-        <h3 className="mt-1.5 font-display text-lg font-semibold text-cyan-100">
+        <h3 className="mt-1.5 font-display text-heading-sm font-semibold text-[var(--color-text-primary)]">
           {project.name}
         </h3>
-        <p className="mt-1.5 line-clamp-3 text-[13px] leading-relaxed text-slate-300">
+        <p className="mt-1.5 line-clamp-3 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
           {project.summary}
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {project.technologies.slice(0, 5).map((tech) => (
             <span
               key={tech}
-              className="rounded border border-line bg-white/[0.03] px-1.5 py-0.5 font-mono text-[10px] text-slate-400"
+              className="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-caption text-[var(--color-text-secondary)]"
             >
               {tech}
             </span>
@@ -78,16 +77,16 @@ export function ProjectsUniverse() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="relative scroll-mt-20 py-24 sm:py-32"
+      className="section"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="section-inner">
         <Reveal>
           <SectionHeading
             index="03"
             eyebrow="Featured Projects — repository universe"
             title={
               <span id="projects-heading">
-                A universe of <span className="text-cyan-300">engineered systems</span>,{" "}
+                A universe of <span className="text-accent">engineered systems</span>,{" "}
                 ranked by impact
               </span>
             }
@@ -95,8 +94,8 @@ export function ProjectsUniverse() {
           />
         </Reveal>
 
-        <div className="relative mt-12 min-h-[400px] overflow-hidden rounded-xl border border-line bg-surface/15 sm:min-h-[480px] lg:min-h-[560px]">
-          <div className="absolute inset-0 bg-lines opacity-60" aria-hidden="true" />
+        <div className="relative mt-12 min-h-[400px] overflow-hidden rounded-2xl border border-border bg-[var(--color-card)]/30 sm:min-h-[480px] lg:min-h-[560px]">
+          <div className="absolute inset-0 bg-grid opacity-60" aria-hidden="true" />
           {webgl ? (
             <>
               <ProjectUniverseCanvas
@@ -139,7 +138,7 @@ export function ProjectsUniverse() {
         </div>
 
         <Reveal className="mt-16">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
             <h3 className="sys-label">
               secondary experimental surface — {secondaryProjects.length} repos
             </h3>
@@ -147,27 +146,27 @@ export function ProjectsUniverse() {
               href={siteConfig.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-slate-400 transition-colors hover:text-cyan-200"
+              className="inline-flex items-center gap-1.5 font-mono text-caption uppercase tracking-[0.16em] text-[var(--color-text-muted)] transition-colors hover:text-accent"
             >
               <Github className="h-3.5 w-3.5" aria-hidden="true" />
               view all on github
             </a>
           </div>
 
-          <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {secondaryProjects.map((repo) => (
               <li key={repo.name}>
                 <a
                   href={repo.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="panel-nested flex h-full flex-col gap-2 p-4 transition-colors hover:border-accent/35"
+                  className="card-interactive flex h-full flex-col gap-2 p-4"
                 >
                   <div className="flex items-start justify-between gap-2">
-                    <span className="font-mono text-[12px] text-slate-200">
+                    <span className="font-mono text-body-sm text-[var(--color-text-primary)]">
                       {repo.name}
                     </span>
-                    <span className="inline-flex shrink-0 items-center gap-1 font-mono text-[10px] text-slate-500">
+                    <span className="inline-flex shrink-0 items-center gap-1 font-mono text-caption text-[var(--color-text-muted)]">
                       <span
                         className="h-1.5 w-1.5 rounded-full"
                         style={{ backgroundColor: languageHex(repo.language) }}
@@ -176,14 +175,14 @@ export function ProjectsUniverse() {
                       {repo.language ?? "—"}
                     </span>
                   </div>
-                  <p className="line-clamp-2 text-[12px] leading-relaxed text-slate-400">
+                  <p className="line-clamp-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
                     {repo.summary}
                   </p>
                   <div className="mt-auto flex flex-wrap gap-1 pt-1">
                     {repo.highlights.slice(0, 3).map((highlight) => (
                       <span
                         key={highlight}
-                        className="rounded border border-line/70 bg-white/[0.02] px-1.5 py-0.5 font-mono text-[10px] text-slate-500"
+                        className="rounded border border-border bg-card px-1.5 py-0.5 font-mono text-caption text-[var(--color-text-muted)]"
                       >
                         {highlight}
                       </span>

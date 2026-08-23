@@ -28,36 +28,50 @@ export default async function BlogIndexPage({ searchParams }: BlogIndexPageProps
         />
       </Reveal>
 
-      <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {posts.map((post, index) => (
-          <Reveal key={post.slug} delay={index * 0.05}>
-            <BlogPostCard post={post} slug={post.slug} />
-          </Reveal>
-        ))}
-      </div>
+      {totalPosts === 0 ? (
+        <div className="mt-12 panel p-12 text-center">
+          <h3 className="font-display text-xl font-semibold text-slate-100">
+            No posts yet
+          </h3>
+          <p className="mt-2 text-slate-400">
+            Check back soon for technical writings on backend architecture,
+            security operations, and AI agents.
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post, index) => (
+              <Reveal key={post.slug} delay={index * 0.05}>
+                <BlogPostCard post={post} slug={post.slug} />
+              </Reveal>
+            ))}
+          </div>
 
-      {totalPages > 1 && (
-        <nav className="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
-          {currentPage > 1 && (
-            <Link
-              href={`/blog?page=${currentPage - 1}`}
-              className="btn-secondary inline-flex items-center gap-2 rounded-md border border-line bg-white/[0.02] px-4 py-2 font-mono text-sm transition-colors hover:border-accent/50 hover:text-accent"
-            >
-              ← Previous
-            </Link>
+          {totalPages > 1 && (
+            <nav className="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+              {currentPage > 1 && (
+                <Link
+                  href={`/blog?page=${currentPage - 1}`}
+                  className="btn-secondary inline-flex items-center gap-2 rounded-md border border-line bg-white/[0.02] px-4 py-2 font-mono text-sm transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  ← Previous
+                </Link>
+              )}
+              <span className="px-4 font-mono text-sm text-slate-500">
+                Page {currentPage} of {totalPages} ({totalPosts} posts)
+              </span>
+              {currentPage < totalPages && (
+                <Link
+                  href={`/blog?page=${currentPage + 1}`}
+                  className="btn-secondary inline-flex items-center gap-2 rounded-md border border-line bg-white/[0.02] px-4 py-2 font-mono text-sm transition-colors hover:border-accent/50 hover:text-accent"
+                >
+                  Next →
+                </Link>
+              )}
+            </nav>
           )}
-          <span className="px-4 font-mono text-sm text-slate-500">
-            Page {currentPage} of {totalPages} ({totalPosts} posts)
-          </span>
-          {currentPage < totalPages && (
-            <Link
-              href={`/blog?page=${currentPage + 1}`}
-              className="btn-secondary inline-flex items-center gap-2 rounded-md border border-line bg-white/[0.02] px-4 py-2 font-mono text-sm transition-colors hover:border-accent/50 hover:text-accent"
-            >
-              Next →
-            </Link>
-          )}
-        </nav>
+        </>
       )}
 
       <div className="mt-16 rounded-xl border border-line/50 bg-white/[0.02] p-8 text-center">

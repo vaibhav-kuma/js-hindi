@@ -4,6 +4,7 @@ import { siteConfig } from "@/data/site";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -110,11 +111,13 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Skip to content
         </a>
-        <LenisProvider>
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
-        </LenisProvider>
+        <ThemeProvider>
+          <LenisProvider>
+            <Header />
+            <main id="main">{children}</main>
+            <Footer />
+          </LenisProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

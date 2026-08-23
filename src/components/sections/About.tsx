@@ -1,4 +1,6 @@
-import { Activity, Boxes, Cpu, ShieldCheck } from "lucide-react";
+"use client";
+
+import { Cpu, ShieldCheck, Boxes, Activity } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Tag } from "@/components/ui/Tag";
@@ -34,9 +36,9 @@ export function About() {
     <section
       id="about"
       aria-labelledby="about-heading"
-      className="relative scroll-mt-20 py-24 sm:py-32"
+      className="section"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="section-inner">
         <Reveal>
           <SectionHeading
             index="01"
@@ -44,95 +46,109 @@ export function About() {
             title={
               <span id="about-heading">
                 A builder at the{" "}
-                <span className="text-cyan-300">intersection of AI, security & backend</span>
+                <span className="text-accent">intersection of AI, security & backend</span>
               </span>
             }
           />
         </Reveal>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-12">
+        <div className="mt-16 grid gap-10 lg:grid-cols-12">
+          {/* Terminal-style profile card */}
           <Reveal className="lg:col-span-5" delay={0.05}>
-            <div className="panel overflow-hidden">
-              <div className="flex items-center gap-2 border-b border-line px-4 py-3">
+            <div className="card h-full overflow-hidden">
+              <div className="flex items-center gap-2 border-b border-border px-4 py-3 -mx-6 -mb-6">
                 <span className="h-2.5 w-2.5 rounded-full bg-danger/80" aria-hidden="true" />
                 <span className="h-2.5 w-2.5 rounded-full bg-amber/80" aria-hidden="true" />
                 <span className="h-2.5 w-2.5 rounded-full bg-mint/80" aria-hidden="true" />
-                <span className="ml-2 font-mono text-xs text-slate-500">profile — bash</span>
+                <span className="ml-2 font-mono text-xs text-[var(--color-text-muted)]">profile — bash</span>
               </div>
-              <div className="space-y-3 p-5 font-mono text-[13px] leading-relaxed">
-                <p className="text-slate-300">
-                  <span className="text-cyan-300">$</span> whoami && pwd
+              <div className="space-y-4 p-2 font-mono text-[13px] leading-relaxed">
+                <div className="flex items-baseline gap-2 text-[var(--color-text-secondary)]">
+                  <span className="text-accent">$</span>
+                  <span>whoami && pwd</span>
+                </div>
+                <p className="pl-6 text-[var(--color-text-muted)]">
+                  {siteConfig.name} — Backend Developer & Security Engineer
+                  <span className="text-accent"> @</span> /engineering/lab
                 </p>
-                <p className="pl-3 text-slate-400">
-                  vaibhav-kumar — Backend Developer &amp; Security Analysis
-                  <span className="text-cyan-200"> @</span> /engineering/lab
-                </p>
-                <p className="text-slate-300">
-                  <span className="text-cyan-300">$</span> cat focus.txt
-                </p>
-                <p className="pl-3 text-slate-400">
+                <div className="flex items-baseline gap-2 text-[var(--color-text-secondary)]">
+                  <span className="text-accent">$</span>
+                  <span>cat focus.txt</span>
+                </div>
+                <p className="pl-6 text-[var(--color-text-muted)] leading-relaxed">
                   [solid: backend engineering, threat detection, security automation]<br />
                   [now: AI-driven SOC platform · agentic modernization · observability]
                 </p>
-                <p className="text-slate-300">
-                  <span className="text-cyan-300">$</span> echo $location
-                </p>
-                <p className="pl-3 text-slate-400">dehradun.in 🇮🇳 — utc+5:30</p>
-                <p className="text-slate-300">
-                  <span className="text-cyan-300">$</span> system.status
-                </p>
-                <p className="text-slate-300">
-                  <span className="text-cyan-300">$</span>
-                  <span className="cursor-block" aria-hidden="true" />
-                </p>
+                <div className="flex items-baseline gap-2 text-[var(--color-text-secondary)]">
+                  <span className="text-accent">$</span>
+                  <span>echo $location</span>
+                </div>
+                <p className="pl-6 text-[var(--color-text-muted)]">{siteConfig.location} 🇮🇳 — utc+5:30</p>
+                <div className="flex items-baseline gap-2 text-[var(--color-text-secondary)]">
+                  <span className="text-accent">$</span>
+                  <span>system.status</span>
+                </div>
+                <div className="pl-6 flex items-center gap-2 text-[var(--color-text-secondary)]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inset-0 rounded-full bg-mint animate-ping opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
+                  </span>
+                  <span>All systems operational</span>
+                  <span className="cursor-block ml-1" aria-hidden="true" />
+                </div>
               </div>
             </div>
           </Reveal>
 
-          <div className="lg:col-span-7">
+          {/* Bio & domains */}
+          <div className="lg:col-span-7 space-y-8">
             <Reveal delay={0.1}>
-              <p className="max-w-2xl text-base leading-relaxed text-slate-300">
-                I&apos;m {siteConfig.name}, a backend-focused developer and cybersecurity
-                engineer building systems where intelligence meets infrastructure. My
-                work spans detection pipelines and security automation on Python-powered
-                backends, through to AI copilots and agent-driven platforms on the modern
-                TypeScript stack — each project engineered as a real system with events,
-                stores and observability, not a repo of scripts.
-              </p>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-400">
-                Every capability on this site is traced to a public repository. The
-                flagship SOC_plateform mirrors a modern Security Operations Center as 15
-                microservices; the rest of the lab demonstrates the same discipline at
-                smaller scale.
-              </p>
+              <div className="max-w-2xl space-y-4">
+                <p className="text-body-lg text-[var(--color-text-secondary)] leading-relaxed">
+                  I&apos;m {siteConfig.name}, a backend-focused developer and cybersecurity
+                  engineer building systems where intelligence meets infrastructure. My
+                  work spans detection pipelines and security automation on Python-powered
+                  backends, through to AI copilots and agent-driven platforms on the modern
+                  TypeScript stack — each project engineered as a real system with events,
+                  stores and observability, not a repo of scripts.
+                </p>
+                <p className="text-body text-[var(--color-text-muted)] leading-relaxed">
+                  Every capability on this site is traced to a public repository. The
+                  flagship SOC_plateform mirrors a modern Security Operations Center as 15
+                  microservices; the rest of the lab demonstrates the same discipline at
+                  smaller scale.
+                </p>
+              </div>
             </Reveal>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {domains.map((domain, index) => (
-                <Reveal key={domain.title} delay={0.1 + index * 0.06}>
-                  <div className="panel h-full p-5 transition-colors hover:border-accent/30">
-                    <div className="flex items-center gap-2.5">
-                      <span className="flex h-8 w-8 items-center justify-center rounded-md border border-line bg-white/[0.02] text-accent">
-                        <domain.icon className="h-4 w-4" aria-hidden="true" />
-                      </span>
-                      <h3 className="font-display text-sm font-semibold text-slate-100">
-                        {domain.title}
-                      </h3>
+            <Reveal delay={0.15}>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {domains.map((domain, index) => (
+                  <Reveal key={domain.title} delay={0.15 + index * 0.06}>
+                    <div className="card h-full transition-all duration-300 hover:border-accent/30 hover:shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-card">
+                          <domain.icon className="h-5 w-5 text-accent" aria-hidden="true" />
+                        </div>
+                        <h3 className="font-display text-heading-sm font-semibold text-[var(--color-text-primary)]">
+                          {domain.title}
+                        </h3>
+                      </div>
+                      <ul className="mt-4 space-y-2">
+                        {domain.points.map((item) => (
+                          <li key={item} className="flex items-start gap-2.5 text-body-sm text-[var(--color-text-secondary)]">
+                            <span className="mt-1.5 flex h-1.5 w-1.5 shrink-0 rounded-full bg-accent/70" aria-hidden="true" />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <ul className="mt-3 space-y-1.5">
-                      {domain.points.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-[13px] text-slate-400">
-                          <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-accent/70" aria-hidden="true" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+                  </Reveal>
+                ))}
+              </div>
+            </Reveal>
 
-            <Reveal delay={0.2} className="mt-7">
+            <Reveal delay={0.25} className="pt-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="sys-label mr-1">primary languages</span>
                 {languages.map((language) => (

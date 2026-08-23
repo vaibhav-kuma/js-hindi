@@ -35,14 +35,12 @@ export function WebGLFallback({
       )}
       aria-hidden="true"
     >
-      <div className="bg-lines absolute inset-0 opacity-60" />
+      <div className="bg-grid absolute inset-0 opacity-60" />
       <div className="relative flex flex-col items-center gap-2">
-        <div className="relative h-28 w-28 rounded-full border border-accent/30">
-          <div className="absolute inset-4 rounded-full border border-violet/40" />
-          <div className="absolute inset-9 rounded-full border border-mint/50" />
-          <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-glow-sm" />
-          <span className="absolute left-1/2 top-1/2 h-24 w-px -translate-x-1/2 -translate-y-1/2 rotate-45 bg-gradient-to-b from-transparent via-mint/60 to-transparent" />
-          <span className="absolute left-1/2 top-1/2 h-24 w-px -translate-x-1/2 -translate-y-1/2 -rotate-45 bg-gradient-to-b from-transparent via-violet/60 to-transparent" />
+        <div className="relative h-28 w-28 rounded-full border border-border">
+          <div className="absolute inset-4 rounded-full border border-border" />
+          <div className="absolute inset-9 rounded-full border border-border" />
+          <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-glow" />
         </div>
         <span className="sys-label">{label}</span>
       </div>

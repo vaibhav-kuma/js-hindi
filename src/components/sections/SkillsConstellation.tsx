@@ -8,8 +8,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProjectChip } from "@/components/projects/ProjectChip";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
-const GROUP_COLORS = {
+const GROUP_COLORS_DARK = {
   languages: "#22d3ee",
   backend: "#a78bfa",
   frontend: "#fbbf24",
@@ -18,7 +19,16 @@ const GROUP_COLORS = {
   infrastructure: "#94a3b8",
 } as const;
 
-type GroupId = keyof typeof GROUP_COLORS;
+const GROUP_COLORS_LIGHT = {
+  languages: "#06b6d4",
+  backend: "#7c3aed",
+  frontend: "#d97706",
+  cybersecurity: "#dc2626",
+  ai: "#059669",
+  infrastructure: "#475569",
+} as const;
+
+type GroupId = keyof typeof GROUP_COLORS_DARK;
 
 function hashString(value: string): number {
   let h = 0;
@@ -74,6 +84,7 @@ export function SkillsConstellation() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const reduced = usePrefersReducedMotion();
+  const { theme } = useTheme();
 
   const [size, setSize] = useState({ width: 0, height: 0 });
   const [hovered, setHovered] = useState<string | null>(null);
@@ -141,6 +152,13 @@ export function SkillsConstellation() {
     setSelected(findNode(event.clientX - rect.left, event.clientY - rect.top));
   };
 
+  const groupColors = theme === "dark" ? GROUP_COLORS_DARK : GROUP_COLORS_LIGHT;
+  const gridColor = theme === "dark" ? "rgba(148, 163, 184, 0.05)" : "rgba(15, 23, 42, 0.03)";
+  const linkColor = theme === "dark" ? "rgba(71, 85, 105, 0.32)" : "rgba(15, 23, 42, 0.12)";
+  const activeLinkColor = "rgba(8, 145, 178, 0.6)";
+  const dimAlpha = 0.15;
+  const textColor = theme === "dark" ? "#e2e8f0" : "#0f172a";
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || size.width === 0 || size.height === 0) return;
@@ -158,6 +176,23 @@ export function SkillsConstellation() {
       const drift = Math.sin(t * 0.4) * 1.4;
       ctx.clearRect(0, 0, size.width, size.height);
 
+      // Draw subtle grid background
+      ctx.strokeStyle = gridColor;
+      ctx.lineWidth = 0.5;
+      const gridSize = 48;
+      for (let x = 0; x <= size.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x + drift, 0);
+        ctx.lineTo(x + drift, size.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y <= size.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(size.width, y);
+        ctx.stroke();
+      }
+
       const hov = hoveredRef.current;
       const sel = selectedRef.current;
 
@@ -170,9 +205,7 @@ export function SkillsConstellation() {
         ctx.beginPath();
         ctx.moveTo(a.x + drift, a.y);
         ctx.lineTo(b.x + drift, b.y);
-        ctx.strokeStyle = active
-          ? "rgba(34, 211, 238, 0.6)"
-          : "rgba(71, 85, 105, 0.32)";
+        ctx.strokeStyle = active ? activeLinkColor : linkColor;
         ctx.lineWidth = active ? 1.4 : 1;
         ctx.stroke();
       }
@@ -183,27 +216,26 @@ export function SkillsConstellation() {
         const isHovered = hov === point.id;
         const isSelected = sel === point.id;
         const connected = hov ? isNeighbour(hov, point.id) : false;
-        const active = isHovered || (isHovered === false && connected && !isSelected);
         const dim = Boolean(hov || sel) && !isHovered && !isSelected && !connected;
 
-        ctx.globalAlpha = dim ? 0.15 : 1;
+        ctx.globalAlpha = dim ? dimAlpha : 1;
         ctx.beginPath();
         ctx.arc(x, y, isHovered || isSelected ? 7.5 : 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = GROUP_COLORS[point.group];
+        ctx.fillStyle = groupColors[point.group];
         ctx.fill();
         if (isHovered || isSelected) {
-          ctx.strokeStyle = "rgba(226, 232, 240, 0.85)";
+          ctx.strokeStyle = textColor;
           ctx.lineWidth = 1.25;
           ctx.stroke();
           ctx.font = '500 10px var(--font-jetbrains-mono), monospace';
           ctx.textAlign = "center";
-          ctx.fillStyle = "#e2e8f0";
+          ctx.fillStyle = textColor;
           ctx.fillText(point.label, x, y - 13);
         } else if (connected && hov) {
           ctx.globalAlpha = 0.9;
           ctx.beginPath();
           ctx.arc(x, y, 5.5, 0, Math.PI * 2);
-          ctx.strokeStyle = GROUP_COLORS[point.group];
+          ctx.strokeStyle = groupColors[point.group];
           ctx.lineWidth = 1;
           ctx.stroke();
         }
@@ -214,7 +246,7 @@ export function SkillsConstellation() {
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [size, reduced, pointById, points]);
+  }, [size, reduced, pointById, points, theme, gridColor, groupColors, linkColor, textColor]);
 
   const selectedNode = selected ? pointById[selected] : null;
   const selectedProjects = selectedNode
@@ -224,8 +256,8 @@ export function SkillsConstellation() {
     : [];
 
   return (
-    <section id="skills" aria-labelledby="skills-heading" className="relative scroll-mt-20 py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="skills" aria-labelledby="skills-heading" className="section">
+      <div className="section-inner">
         <Reveal>
           <SectionHeading
             index="02"
@@ -243,7 +275,7 @@ export function SkillsConstellation() {
           <Reveal>
             <div
               ref={wrapperRef}
-              className="relative h-[380px] overflow-hidden rounded-xl border border-line bg-surface/30 sm:h-[460px]"
+              className="relative h-[380px] overflow-hidden rounded-xl border border-border bg-[var(--color-card)]/50 sm:h-[460px]"
             >
               <canvas
                 ref={canvasRef}
@@ -261,16 +293,16 @@ export function SkillsConstellation() {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <aside className="panel h-fit p-5">
+            <aside className="card h-fit">
               {selectedNode ? (
                 <>
-                  <span className="sys-label" style={{ color: GROUP_COLORS[selectedNode.group] }}>
+                  <span className="sys-label" style={{ color: groupColors[selectedNode.group] }}>
                     {groupById[selectedNode.group]?.label}
                   </span>
-                  <h3 className="mt-2 font-display text-lg font-semibold text-slate-100">
+                  <h3 className="mt-2 font-display text-heading-md font-semibold text-[var(--color-text-primary)]">
                     {selectedNode.label}
                   </h3>
-                  <p className="mt-2 text-[13px] leading-relaxed text-slate-400">
+                  <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
                     Used directly in the featured systems below.
                   </p>
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -279,7 +311,7 @@ export function SkillsConstellation() {
                         <ProjectChip key={project.slug} slug={project.slug} />
                       ))
                     ) : (
-                      <p className="font-mono text-xs text-slate-500">
+                      <p className="font-mono text-xs text-[var(--color-text-muted)]">
                         used across the wider repository set
                       </p>
                     )}
@@ -288,9 +320,9 @@ export function SkillsConstellation() {
               ) : (
                 <div>
                   <span className="sys-label">explorer</span>
-                  <p className="mt-2 font-mono text-[13px] leading-relaxed text-slate-400">
+                  <p className="mt-2 font-mono text-[13px] leading-relaxed text-[var(--color-text-muted)]">
                     select any node to resolve its connected projects. The same
-                    graph is navigable below for keyboard &amp; touch.
+                    graph is navigable below for keyboard & touch.
                   </p>
                 </div>
               )}
@@ -302,14 +334,14 @@ export function SkillsConstellation() {
           <h3 className="sys-label mb-4">full stack index — selectable</h3>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {techGroups.map((group) => (
-              <div key={group.id} className="panel-nested p-4">
+              <div key={group.id} className="card">
                 <div className="flex items-center gap-2">
                   <span
                     className="h-2 w-2 rounded-full"
-                    style={{ backgroundColor: GROUP_COLORS[group.id as GroupId] }}
+                    style={{ backgroundColor: groupColors[group.id as GroupId] }}
                     aria-hidden="true"
                   />
-                  <h4 className="font-mono text-[11px] uppercase tracking-[0.16em] text-slate-300">
+                  <h4 className="font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-text-secondary)]">
                     {group.label}
                   </h4>
                 </div>
@@ -323,10 +355,10 @@ export function SkillsConstellation() {
                         onClick={() => setSelected(node.id)}
                         aria-pressed={selected === node.id}
                         className={cn(
-                          "rounded border px-2 py-0.5 font-mono text-[11px] transition-colors",
+                          "rounded border px-2.5 py-1 font-mono text-[11px] transition-all duration-200",
                           selected === node.id
-                            ? "border-accent/60 bg-accent/20 text-cyan-200"
-                            : "border-line bg-white/[0.02] text-slate-400 hover:border-accent/40 hover:text-cyan-200",
+                            ? "border-accent/60 bg-accent/10 text-accent"
+                            : "border-border bg-card text-[var(--color-text-secondary)] hover:border-accent/40 hover:text-accent hover:bg-card-hover",
                         )}
                       >
                         {node.label}

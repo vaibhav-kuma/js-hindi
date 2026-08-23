@@ -1,0 +1,2 @@
+# This file ensures the content/blog directory is tracked by git even when empty.
+# Blog posts are .mdx files placed in this directory.

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Calendar, Clock, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { BlogPostMeta } from '@/lib/blog/types';
@@ -51,11 +52,13 @@ export function BlogPostHeader({ post, readingTime }: BlogPostHeaderProps) {
       </div>
 
       {post.coverImage && (
-        <div className="mt-8 rounded-xl overflow-hidden border border-line/50">
-          <img
+        <div className="mt-8 rounded-xl overflow-hidden border border-line/50 relative aspect-video">
+          <Image
             src={post.coverImage}
             alt={post.title}
-            className="w-full h-auto"
+            fill
+            className="object-cover"
+            sizes="100vw"
           />
         </div>
       )}

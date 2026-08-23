@@ -12,11 +12,9 @@ import * as THREE from "three";
 export function MonitoringGrid({
   reduced = false,
   hovered = false,
-  density = 1,
 }: {
   reduced?: boolean;
   hovered?: boolean;
-  density?: number;
 }) {
   const group = useRef<THREE.Group>(null);
   const instancedRef = useRef<THREE.InstancedMesh>(null);

@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import type { ProjectConfig } from "@/lib/types";
 import { Tag } from "@/components/ui/Tag";
 import { SceneLoader, WebGLFallback } from "@/components/three/SceneLoader";
+import { SceneCanvas } from "@/components/three/SceneCanvas";
 import { useWebglSupported } from "@/hooks/useWebgl";
 
 /** Lazy-loadable 3D project visual (out of SSR bundle). */
@@ -32,12 +33,20 @@ export function CaseStudyTechStack({ project }: { project: ProjectConfig }) {
       {project.visual ? (
         <div className="mt-10 relative h-[420px] w-full rounded-xl border border-line bg-surface/50 overflow-hidden">
           {webgl ? (
-            <ProjectVisual
-              kind={project.visual}
-              reduced={false}
-              hovered={false}
-              density={1}
-            />
+            <SceneCanvas
+              camera={{ position: [0, 0, 4], fov: 45 }}
+              tier="high"
+              reducedMotion={false}
+              pointerEvents={false}
+              label="Security Operations Center core visualization"
+            >
+              <ProjectVisual
+                kind={project.visual}
+                reduced={false}
+                hovered={false}
+                density={1}
+              />
+            </SceneCanvas>
           ) : (
             <WebGLFallback className="h-full" />
           )}

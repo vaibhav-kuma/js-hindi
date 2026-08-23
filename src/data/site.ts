@@ -2,11 +2,6 @@ import type { NavigationItem } from "@/lib/types";
 
 /**
  * Global site configuration.
- *
- * NOTE — Placeholder contact values:
- * `email`, `linkedinUrl` and `resumeUrl` are intentionally left pointing to the
- * GitHub profile because no public email / LinkedIn / resume URL was found in the
- * source material. Replace them with the real values before production deployment.
  */
 export const siteConfig = {
   name: "Vaibhav Kumar",
@@ -20,11 +15,9 @@ export const siteConfig = {
   githubUsername: "vaibhav-kuma",
   githubUrl: "https://github.com/vaibhav-kuma",
 
-  /* ---- EDIT ME: contact details ---- */
-  email: "",
-  linkedinUrl: "",
-  resumeUrl: "https://github.com/vaibhav-kuma",
-  /* ---- /EDIT ME ---- */
+  email: "vaibhavkumar26412@gmail.com",
+  linkedinUrl: "https://www.linkedin.com/in/vaibhav-kumar-a19a81232",
+  resumeUrl: "https://drive.google.com/file/d/1lUsnXLDl0OcRkf4zustqn5wTFnpwBpMe/view?usp=sharing",
 
   /** Configurable availability indicator. */
   openToOpportunities: true,

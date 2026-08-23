@@ -393,41 +393,12 @@ export const featuredProjects: ProjectConfig[] = [
  * experiments. These are surfaced in the "secondary experimental surface"
  * portion of the Projects universe, linking out to GitHub. Every entry is
  * verified against the GitHub profile (pushed_at dates, language, stars).
+ *
+ * NOTE: Featured projects (SOC_plateform, legacy-lift-ai, VADT, DarkExposure,
+ * Threat-Detection-Monitoring-Dashboard) are intentionally excluded to avoid
+ * duplication. This list contains only non-featured repositories.
  */
 export const secondaryProjects: SecondaryProject[] = [
-  {
-    name: "VADT",
-    category: "Threat Detection",
-    summary:
-      "Real-time threat-detection dashboard with Flask, React, MongoDB and MITRE ATT&CK tagging, plus a containerized SIEM.",
-    language: "Python",
-    stars: 0,
-    githubUrl: "https://github.com/vaibhav-kuma/VADT",
-    lastPush: "2026-08-01T00:00:00Z",
-    highlights: ["Flask", "React", "MongoDB", "MITRE ATT&CK", "SIEM", "Docker"],
-  },
-  {
-    name: "DarkExposure",
-    category: "Threat Intelligence",
-    summary:
-      "Dark-web threat-intelligence platform monitoring forums and paste sites for organizational exposure signals.",
-    language: "PHP",
-    stars: 0,
-    githubUrl: "https://github.com/vaibhav-kuma/DarkExposure",
-    lastPush: "2026-04-01T00:00:00Z",
-    highlights: ["Laravel", "Vue.js", "Threat Intel", "Dark Web", "Scraping"],
-  },
-  {
-    name: "legacy-lift-ai",
-    category: "AI Agent Platform",
-    summary:
-      "Agentic AI system for legacy system modernization through code analysis and automated refactoring.",
-    language: "TypeScript",
-    stars: 0,
-    githubUrl: "https://github.com/vaibhav-kuma/legacy-lift-ai",
-    lastPush: "2026-07-20T00:00:00Z",
-    highlights: ["AI Agents", "LLM", "TypeScript", "NestJS", "Refactoring"],
-  },
   {
     name: "-AI-driven-security-monitoring",
     category: "AI Security",

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Calendar, Tag } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { BlogPostMeta } from '@/lib/blog/types';
@@ -20,11 +21,12 @@ export function BlogPostCard({ post, slug, className }: BlogPostCardProps) {
     <article className={cn('panel group relative overflow-hidden', className)}>
       {post.coverImage && (
         <Link href={`/blog/${slug}`} className="block aspect-video overflow-hidden" aria-label={`Read "${post.title}"`}>
-          <img
+          <Image
             src={post.coverImage}
             alt=""
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Link>
       )}

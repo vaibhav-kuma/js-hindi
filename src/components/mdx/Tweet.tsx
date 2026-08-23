@@ -26,11 +26,13 @@ export function Tweet({ id, conversation, align = 'center', theme = 'dark', clas
         script.onload = () => {
           if (window.twttr) {
             window.twttr.widgets.load(containerRef.current ?? undefined);
+            setRendered(true);
           }
         };
         document.body.appendChild(script);
       } else {
         window.twttr.widgets.load(containerRef.current ?? undefined);
+        setRendered(true);
       }
     };
 
