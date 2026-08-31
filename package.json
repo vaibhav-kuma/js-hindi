@@ -34,7 +34,7 @@
     "rss": "^1.2.2",
     "shiki": "^1.29.2",
     "tailwind-merge": "^2.6.0",
-    "three": "^0.172.0"
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
