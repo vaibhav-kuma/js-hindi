@@ -32,7 +32,7 @@
     "rehype-pretty-code": "^0.14.5",
     "rehype-slug": "^6.0.0",
     "rss": "^1.2.2",
-    "shiki": "^1.29.2",
+    "shiki": "^4.5.0",
     "tailwind-merge": "^2.6.0",
     "three": "^0.172.0"
   },
